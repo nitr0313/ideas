@@ -6,4 +6,4 @@ from django.contrib.auth.models import User
 class IdeaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Idea
-        fields = ['title', 'description']
+        fields = ['id', 'title', 'description']
