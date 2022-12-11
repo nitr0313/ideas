@@ -11,3 +11,8 @@ class IdeaViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, instance):
         instance.save(user=self.request.user)
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(user=self.request.user)
+        return qs
