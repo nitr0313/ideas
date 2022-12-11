@@ -23,7 +23,8 @@ INSTALLED_APPS = [
 ]
 
 PROJECT_APPS = [
-    'ideas.apps.IdeasConfig'
+    'ideas.apps.IdeasConfig',
+    'frontend.apps.FrontendConfig',
 ]
 
 MIDDLEWARE = [
@@ -98,7 +99,8 @@ MEDIA_URL = env.str('MEDIA_URL', default='/media/')
 
 STATIC_ROOT = PUBLIC_ROOT / 'static'
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    BASE_DIR / "static",
+    BASE_DIR / "frontend",
 ]
 STATIC_URL = env.str('STATIC_URL', default='/static/')
 
