@@ -33,3 +33,7 @@ class Idea(models.Model):
     def add_index(self):
         self.idea_index += 1
         self.save()
+
+    # def get_absolute_url(self):
+    #     return reverse("model_detail", kwargs={"pk": self.pk})
+    
