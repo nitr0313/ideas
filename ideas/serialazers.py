@@ -4,8 +4,9 @@ from django.contrib.auth.models import User
 
 
 class IdeaSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-    
+
     class Meta:
         model = Idea
-        fields = ['id', 'title', 'description', 'status']
+        fields = ['id', 'title', 'description', 'status', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
