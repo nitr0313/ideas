@@ -8,8 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 env = environ.Env()
 environ.Env.read_env(BASE_DIR / '.env')
 
-SECRET_KEY = 'django-insecure-&(bl%2ik16o30e*i7^)4ve$ps1(@2_azntu)*4d+h%twdzep=q'
-
 DEBUG = True
 
 INSTALLED_APPS = [
@@ -55,9 +53,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
-
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -72,15 +67,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-LANGUAGE_CODE = 'ru-RU'
-
-TIME_ZONE = 'Europe/Moscow'
-
-USE_I18N = True
-
-USE_TZ = True
-
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
