@@ -8,32 +8,32 @@ export default class IdeasService {
     constructor() {
     }
 
-    getCustomers() {
+    getIdeas() {
         const url = `${API_URL}/v1/ideas/`;
         return axios.get(url).then(response => response.data);
     }
 
-    getCustomersByURL(link) {
+    getIdeasByURL(link) {
         const url = `${API_URL}${link}`;
         return axios.get(url).then(response => response.data);
     }
 
-    getCustomer(pk) {
+    getIdea(pk) {
         const url = `${API_URL}/v1/ideas/${pk}`;
         return axios.get(url).then(response => response.data);
     }
 
-    deleteCustomer(idea) {
+    deleteIdea(idea) {
         const url = `${API_URL}/v1/ideas/${idea.pk}`;
         return axios.delete(url);
     }
 
-    createCustomer(idea) {
+    createIdea(idea) {
         const url = `${API_URL}/v1/ideas/`;
         return axios.post(url, idea);
     }
 
-    updateCustomer(idea) {
+    updateIdea(idea) {
         const url = `${API_URL}/v1/ideas/${idea.pk}`;
         return axios.put(url, idea);
     }

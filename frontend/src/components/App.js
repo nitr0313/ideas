@@ -1,7 +1,9 @@
 import React, {Component} from "react";
 import {createRoot} from 'react-dom/client';
 import IdeasRow from "./Idea";
+import IdeasService from "../IdeasService";
 
+const IService = new IdeasService();
 
 class App extends Component {
     constructor(props) {
