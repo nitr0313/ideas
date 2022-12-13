@@ -7,5 +7,5 @@ class IdeaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Idea
-        fields = ['id', 'title', 'description', 'status', 'created_at', 'idea_index']
-        read_only_fields = ['id', 'created_at']
+        fields = ['pk', 'title', 'description', 'status', 'created_at', 'idea_index']
+        read_only_fields = ['pk', 'created_at']
