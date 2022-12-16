@@ -4,24 +4,10 @@ import IdeasRow from "./Idea";
 import IdeasService from "../IdeasService";
 import Notify from './Notify';
 import ErrorBoundary from "./Debug";
-import { useState } from 'react';
+import {useState} from 'react';
 import {TOAST_PROPERTIES} from "../toastProps";
 
 const IService = new IdeasService();
-
-
-const testList = [
-    {
-        id: 1,
-        title: 'Success',
-        description: 'This is a success toast component',
-    },
-    {
-        id: 2,
-        title: 'Danger',
-        description: 'This is an error toast component',
-    },
-];
 
 
 class App extends Component {
@@ -38,22 +24,14 @@ class App extends Component {
         };
     }
 
-    showToast(type) {
-        const toastProperties = TOAST_PROPERTIES.find((toast) => toast.title.toLowerCase() === type);
-        toastProperties.description = "ПРИВЕТ"
-        this.setState({notifies: [...this.state.notifies, toastProperties]})
-    }
+    // showToast(type) {
+    //     const toastProperties = TOAST_PROPERTIES.find((toast) => toast.title.toLowerCase() === type);
+    //     toastProperties.description = "ПРИВЕТ"
+    //     this.setState({notifies: [...this.state.notifies, toastProperties]})
+    // }
 
     componentDidMount() {
-        fetch("api/v1/ideas/")
-            .then(response => {
-                if (response.status > 400) {
-                    return this.setState(() => {
-                        return {placeholder: "Something went wrong!"};
-                    });
-                }
-                return response.json();
-            })
+        IService.getIdeas()
             .then(data => {
                 let statusNW = data.filter(function (entry) {
                     return entry.status === 'NW';
@@ -83,7 +61,6 @@ class App extends Component {
         return (
             <div>
                 <ErrorBoundary>
-                    {/*<button onClick={() => this.showToast('warning')}>ПОКАЗАТЬ НОТИФАЙ</button>*/}
                     <Notify toastList={this.state.notifies}
                             position="top-end"/>
                     <IdeasRow state={this.state}/>
