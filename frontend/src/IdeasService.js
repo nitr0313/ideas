@@ -1,6 +1,9 @@
 import axios from 'axios';
+import getCookie from "./lib/csrfFetch";
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = 'http://127.0.0.1:8000/api';
+
+const csrfToken = getCookie('csrftoken')
 
 
 export default class IdeasService {
@@ -10,7 +13,7 @@ export default class IdeasService {
 
     getIdeas() {
         const url = `${API_URL}/v1/ideas/`;
-        return axios.get(url).then(response => response.data);
+        return axios.get(url).then(response => response.data).catch(error => console.log(error));
     }
 
     getIdeasByURL(link) {
@@ -25,7 +28,11 @@ export default class IdeasService {
 
     deleteIdea(idea) {
         const url = `${API_URL}/v1/ideas/${idea.pk}`;
-        return axios.delete(url);
+        return axios.delete(url, {
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        });
     }
 
     createIdea(idea) {
