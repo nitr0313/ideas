@@ -11,9 +11,62 @@ class IdeasRow extends Component {
         super(props);
         this.invisibleClassName = "col-lg-4 d-none d-lg-block";
         this.visibleClassName = "col-md-6 col-lg-4";
+        this._mounted = false;
         this.state = {
+            'statusNW': [],
+            'statusIW': [],
+            'statusSC': [],
+            'statusAR': [],
             'notifies': [],
         };
+        this.split_by_statuses();
+    }
+
+    split_by_statuses = () => {
+        console.log(this.props.data)
+
+        let statusNW = this.props.data.filter(function (entry) {
+            return entry.status === 'NW';
+        })
+        let statusIW = this.props.data.filter(function (entry) {
+            return entry.status === 'IW';
+        })
+        let statusSC = this.props.data.filter(function (entry) {
+            return entry.status === 'SC';
+        })
+        let statusAR = this.props.data.filter(function (entry) {
+            return entry.status === 'AR';
+        })
+        if (this._mounted) {
+            this.setState(() => {
+                    return {
+                        statusNW,
+                        statusIW,
+                        statusSC,
+                        statusAR,
+                    };
+                }
+            )
+        } else {
+            this.state = {
+                ...this.state,
+                ...{
+                    statusNW,
+                    statusIW,
+                    statusSC,
+                    statusAR,
+                }
+            }
+        }
+        console.log(this.state);
+    }
+
+    componentDidMount() {
+        this._mounted = true;
+    }
+
+    componentWillUnmount() {
+        this._mounted = false;
     }
 
     getCols = () => {
@@ -72,15 +125,15 @@ class IdeasRow extends Component {
                 </div>
                 <div id='new_ideas' className={this.visibleClassName}>
                     <span className="self-text-center">Новые идеи</span>
-                    < IdeaList data={this.props.state.statusNW}/>
+                    < IdeaList data={this.state.statusNW}/>
                 </div>
                 <div id='inwork_ideas' className={this.invisibleClassName}>
                     <span>В работе</span>
-                    < IdeaList data={this.props.state.statusIW}/>
+                    < IdeaList data={this.state.statusIW}/>
                 </div>
                 <div id='success_ideas' className={this.invisibleClassName}>
                     <span>Выполненные</span>
-                    < IdeaList data={this.props.state.statusSC}/>
+                    < IdeaList data={this.state.statusSC}/>
                 </div>
                 <Notify toastList={this.state.notifies}
                         position="bottom-center"/>

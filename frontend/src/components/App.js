@@ -14,10 +14,11 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            statusNW: [],
-            statusIW: [],
-            statusSC: [],
-            statusAR: [],
+            data: [],
+            // statusNW: [],
+            // statusIW: [],
+            // statusSC: [],
+            // statusAR: [],
             loaded: false,
             placeholder: "Loading",
             notifies: [],
@@ -33,28 +34,17 @@ class App extends Component {
     componentDidMount() {
         IService.getIdeas()
             .then(data => {
-                let statusNW = data.filter(function (entry) {
-                    return entry.status === 'NW';
-                })
-                let statusIW = data.filter(function (entry) {
-                    return entry.status === 'IW';
-                })
-                let statusSC = data.filter(function (entry) {
-                    return entry.status === 'SC';
-                })
-                let statusAR = data.filter(function (entry) {
-                    return entry.status === 'AR';
-                })
+                console.log(data);
+
                 this.setState(() => {
                     return {
-                        statusNW,
-                        statusIW,
-                        statusSC,
-                        statusAR,
+                        data: data,
                         loaded: true
                     };
                 });
             });
+        console.log(this.state);
+
     }
 
     render() {
@@ -63,7 +53,7 @@ class App extends Component {
                 <ErrorBoundary>
                     <Notify toastList={this.state.notifies}
                             position="top-end"/>
-                    <IdeasRow state={this.state}/>
+                    <IdeasRow data={this.state.data}/>
                 </ErrorBoundary>
             </div>
         );
