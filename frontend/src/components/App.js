@@ -15,27 +15,15 @@ class App extends Component {
         super(props);
         this.state = {
             data: [],
-            // statusNW: [],
-            // statusIW: [],
-            // statusSC: [],
-            // statusAR: [],
             loaded: false,
             placeholder: "Loading",
             notifies: [],
         };
     }
 
-    // showToast(type) {
-    //     const toastProperties = TOAST_PROPERTIES.find((toast) => toast.title.toLowerCase() === type);
-    //     toastProperties.description = "ПРИВЕТ"
-    //     this.setState({notifies: [...this.state.notifies, toastProperties]})
-    // }
-
     componentDidMount() {
         IService.getIdeas()
             .then(data => {
-                console.log(data);
-
                 this.setState(() => {
                     return {
                         data: data,
@@ -43,8 +31,6 @@ class App extends Component {
                     };
                 });
             });
-        console.log(this.state);
-
     }
 
     render() {

@@ -19,50 +19,38 @@ class IdeasRow extends Component {
             'statusAR': [],
             'notifies': [],
         };
-        this.split_by_statuses();
     }
 
     split_by_statuses = () => {
-        console.log(this.props.data)
+        console.log(this.props)
+        let data = this.props.data
 
-        let statusNW = this.props.data.filter(function (entry) {
+        let statusNW = data.filter(function (entry) {
             return entry.status === 'NW';
         })
-        let statusIW = this.props.data.filter(function (entry) {
+        let statusIW = data.filter(function (entry) {
             return entry.status === 'IW';
         })
-        let statusSC = this.props.data.filter(function (entry) {
+        let statusSC = data.filter(function (entry) {
             return entry.status === 'SC';
         })
-        let statusAR = this.props.data.filter(function (entry) {
+        let statusAR = data.filter(function (entry) {
             return entry.status === 'AR';
         })
-        if (this._mounted) {
-            this.setState(() => {
-                    return {
-                        statusNW,
-                        statusIW,
-                        statusSC,
-                        statusAR,
-                    };
-                }
-            )
-        } else {
-            this.state = {
-                ...this.state,
-                ...{
+        this.setState(() => {
+                return {
                     statusNW,
                     statusIW,
                     statusSC,
                     statusAR,
-                }
+                };
             }
-        }
-        console.log(this.state);
+        )
     }
 
     componentDidMount() {
         this._mounted = true;
+        this.split_by_statuses();
     }
 
     componentWillUnmount() {
