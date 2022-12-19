@@ -1,10 +1,10 @@
-import React, {Component} from "react";
-import {createRoot} from 'react-dom/client';
+import React, { Component, StrictMode } from "react";
+import { createRoot } from 'react-dom/client';
 import IdeasRow from "./Idea";
 import IdeasService from "../IdeasService";
 import Notify from './Notify';
 import ErrorBoundary from "./Debug";
-import {useState} from 'react';
+import { useState } from 'react';
 
 
 const IService = new IdeasService();
@@ -24,7 +24,7 @@ class App extends Component {
             <div>
                 <ErrorBoundary>
                     <Notify toastList={this.state.notifies}
-                            position="top-end"/>
+                        position="top-end" />
                     <IdeasRow />
                 </ErrorBoundary>
             </div>
@@ -38,5 +38,7 @@ export default App;
 const container = document.getElementById("app");
 const root = createRoot(container);
 root.render(
-    <App/>
+    <StrictMode>
+        <App />
+    </StrictMode>
 );
