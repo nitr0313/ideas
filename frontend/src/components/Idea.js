@@ -2,8 +2,9 @@ import React, {Component} from 'react'
 import Notify from "./Notify";
 import {TOAST_PROPERTIES} from "../toastProps";
 import IdeasService from "../IdeasService";
-import ModalForm from "./ModalForEdit";
 import IdeaCard from "./IdeaCard"
+
+const IService = new IdeasService();
 
 class IdeasRow extends Component {
 
@@ -12,9 +13,54 @@ class IdeasRow extends Component {
         this.invisibleClassName = "col-lg-4 d-none d-lg-block";
         this.visibleClassName = "col-md-6 col-lg-4";
         this.state = {
-            'notifies': [],
+            statusNW: [],
+            statusIW: [],
+            statusSC: [],
+            statusAR: [],
+            loaded: false,
+            placeholder: "Loading",
+            notifies: [],
         };
     }
+
+    refresh_data() {
+        IService.getIdeas()
+            .then(data => {
+                console.log(data);
+                let statusNW = [];
+                let statusIW = [];
+                let statusSC = [];
+                let statusAR = [];
+
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].status === 'NW') {
+                        statusNW.push(data[i])
+                    } else if (data[i].status === 'IW') {
+                        statusIW.push(data[i])
+                    } else if (data[i].status === 'SC') {
+                        statusSC.push(data[i])
+                    } else if (data[i].status === 'AR') {
+                        statusAR.push(data[i])
+                    }
+                }
+                this.setState(() => {
+                        return {
+                            statusNW,
+                            statusIW,
+                            statusSC,
+                            statusAR,
+                            loaded: true
+                        };
+                    }
+                )
+            })
+    }
+
+
+    componentDidMount() {
+        this.refresh_data()
+    }
+
 
     getCols = () => {
         return {
@@ -72,15 +118,15 @@ class IdeasRow extends Component {
                 </div>
                 <div id='new_ideas' className={this.visibleClassName}>
                     <span className="self-text-center">Новые идеи</span>
-                    < IdeaList data={this.props.state.statusNW}/>
+                    < IdeaList data={this.state.statusNW}/>
                 </div>
                 <div id='inwork_ideas' className={this.invisibleClassName}>
                     <span>В работе</span>
-                    < IdeaList data={this.props.state.statusIW}/>
+                    < IdeaList data={this.state.statusIW}/>
                 </div>
                 <div id='success_ideas' className={this.invisibleClassName}>
                     <span>Выполненные</span>
-                    < IdeaList data={this.props.state.statusSC}/>
+                    < IdeaList data={this.state.statusSC}/>
                 </div>
                 <Notify toastList={this.state.notifies}
                         position="bottom-center"/>
@@ -90,7 +136,8 @@ class IdeasRow extends Component {
 }
 
 
-class IdeaList extends Component {
+class IdeaList
+    extends Component {
 
     render() {
         return (
