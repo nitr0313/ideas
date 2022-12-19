@@ -16,7 +16,8 @@ class IdeaCard extends Component {
 
     handleDelete = (item) => {
         this.service.deleteIdea(item);
-        this.display = 'None';
+        const obj = document.getElementById("idea_" + item.pk.toString())
+        obj.remove();
         this.setState(this.state);
     }
 
@@ -35,7 +36,8 @@ class IdeaCard extends Component {
 
     render() {
         return (
-            <a href="#" style={{display: this.display}} className="list-group-item list-group-item-action mt-2 ml-5"
+            <a href="#" id={`idea_${this.props.idea.pk.toString()}`
+            } style={{display: this.display}} className="list-group-item list-group-item-action mt-2 ml-5"
                aria-current="true">
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">{this.props.idea.title}</h5>
