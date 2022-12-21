@@ -4,6 +4,7 @@ import {TOAST_PROPERTIES} from "../toastProps";
 import IdeasService from "../IdeasService";
 import IdeaCard from "./IdeaCard"
 import Modal from "./ModalForEdit"
+import Button from 'react-bootstrap/Button';
 
 
 const IService = new IdeasService();
@@ -15,7 +16,9 @@ class IdeasRow extends Component {
         this.invisibleClassName = "col-lg-4 d-none d-lg-block";
         this.visibleClassName = "col-md-6 col-lg-4";
         this.onEditIdea = this.onEditIdea.bind(this);
+        this.onCreateIdea = this.onCreateIdea.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.handleCreateIdeaModal = this.handleCreateIdeaModal.bind(this);
         this.handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal.bind(this);
 
 
@@ -68,23 +71,44 @@ class IdeasRow extends Component {
             })
     }
 
-    handleSubmitIdeaEditModal(item) {
-        IService.updateIdea(item).then(() => {
-            const status_name = "status" + item.status;
-            const data = this.state[status_name];
-
-            for (let i = 0; i < data.length; i++) {
-                if (data[i].pk === item.pk) {
-                    data[i] = item
-                }
+    update_rows(data, item) {
+        let is_updated = false;
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].pk === item.pk) {
+                data[i] = item
+                is_updated = true;
+                break;
             }
+        }
 
-            this.setState(() => {
-                return {
-                    status_name: data
-                }
-            })
+        if (is_updated === false) {
+            data.append(item)
+        }
+
+        this.setState(() => {
+            return {
+                status_name: data
+            }
         })
+    }
+
+    handleSubmitIdeaEditModal(item, new_item = false) {
+        if (new_item === false) {
+            IService.updateIdea(item).then(() => {
+                const status_name = "status" + item.status;
+                const data = this.state[status_name];
+                this.update_rows(data, item);
+            })
+        } else {
+            IService.createIdea(item).then(() => {
+                const status_name = "status" + item.status;
+                const data = this.state[status_name];
+                this.update_rows(data, item);
+            })
+        }
+    }
+
+    handleCreateIdeaModal() {
 
     }
 
@@ -92,6 +116,15 @@ class IdeasRow extends Component {
         this.setState(() => {
             return {
                 showModal: false
+            }
+        })
+    }
+
+
+    onCreateIdea(idea) {
+        this.setState(() => {
+            return {
+                showModal: true
             }
         })
     }
@@ -152,6 +185,9 @@ class IdeasRow extends Component {
         const handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal;
         return (
             <div className="row">
+                <Button variant="primary" onClick={this.onCreateIdea}>
+                    !Add new Idea!
+                </Button>
                 <div className="row">
                     <div className="col-md-6 d-lg-none d-md-block">
                         <button id="NIdeasBtn" className="btn btn-sm btn-light mx-1 active"

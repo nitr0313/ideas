@@ -37,7 +37,11 @@ export default class IdeasService {
 
     createIdea(idea) {
         const url = `${API_URL}/v1/ideas/`;
-        return axios.post(url, idea);
+        return axios.post(url, idea, {
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        });
     }
 
     updateIdea(idea) {

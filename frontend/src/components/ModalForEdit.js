@@ -9,20 +9,34 @@ function ModalForm(props) {
     const item = props.editItem;
     const onClose = props.onClose;
     const handleSubmitIdeaEditModal = props.handleSubmitIdeaEditModal;
-    const _show = props.showModal;
+    const show = props.showModal;
     let titleNode;
     let descNode;
 
-    const onSubmit = values => {
-        item.title = titleNode.value;
-        item.description = descNode.value;
-        onClose();
-        return handleSubmitIdeaEditModal(item)
+    const onSubmit = e => {
+        e.preventDefault();
+        let is_update;
+        let _item = {description: "", id: null, title: ""};
+        if (typeof item !== 'undefined') {
+            _item = item;
+            _item.title = titleNode.value;
+            _item.description = descNode.value;
+            is_update = true;
+        } else {
+            // Новый элеммент!
+            _item.title = titleNode.value;
+            _item.description = descNode.value;
+            is_update = false;
+        }
+        handleClose();
+        return handleSubmitIdeaEditModal(_item, is_update)
     };
+
+    const handleClose = () => onClose();
 
     return (
         <>
-            <Modal show={_show}>
+            <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Редактирование идеи</Modal.Title>
                 </Modal.Header>
@@ -55,7 +69,7 @@ function ModalForm(props) {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onClose}>
+                    <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
                     <Button variant="primary" form="modalForm" type="submit" key="submit">
