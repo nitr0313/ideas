@@ -41,7 +41,9 @@ export default class IdeasService {
             headers: {
                 'X-CSRFToken': csrfToken
             }
-        });
+        })
+            .then(response => response.data)
+            .catch(error => console.log(error));
     }
 
     updateIdea(idea) {

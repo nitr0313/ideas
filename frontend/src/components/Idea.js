@@ -71,17 +71,15 @@ class IdeasRow extends Component {
             })
     }
 
-    update_rows(data, item) {
-        let is_updated = false;
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].pk === item.pk) {
-                data[i] = item
-                is_updated = true;
-                break;
+    update_rows(data, item, is_new_item) {
+        if (is_new_item !== true) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].pk === item.pk) {
+                    data[i] = item
+                    break;
+                }
             }
-        }
-
-        if (is_updated === false) {
+        } else {
             data.append(item)
         }
 
@@ -92,20 +90,22 @@ class IdeasRow extends Component {
         })
     }
 
-    handleSubmitIdeaEditModal(item, new_item = false) {
-        if (new_item === false) {
-            IService.updateIdea(item).then(() => {
-                const status_name = "status" + item.status;
-                const data = this.state[status_name];
-                this.update_rows(data, item);
+    handleSubmitIdeaEditModal(item) {
+        let data, is_new_item, status_name;
+        if ("pk" in item) {
+            IService.updateIdea(item).then( () => {
+                status_name = "status" + item.status;
+                is_new_item = false;
             })
         } else {
-            IService.createIdea(item).then(() => {
-                const status_name = "status" + item.status;
-                const data = this.state[status_name];
-                this.update_rows(data, item);
+            IService.createIdea(item).then(result_data => {
+                item = result_data;
+                status_name = "status" + item.status;
+                is_new_item = true;
             })
         }
+        data = this.state[status_name];
+        this.update_rows(data, item, is_new_item);  // or this.refresh_data() - for full update from api
     }
 
     handleCreateIdeaModal() {
@@ -122,9 +122,10 @@ class IdeasRow extends Component {
 
 
     onCreateIdea(idea) {
+        // TODO Что-то придумать для обнуления формы перед созданием или после того как ею "попользовались"
         this.setState(() => {
             return {
-                showModal: true
+                showModal: true,
             }
         })
     }
@@ -189,7 +190,7 @@ class IdeasRow extends Component {
                     !Add new Idea!
                 </Button>
                 <div className="row">
-                    <div className="col-md-6 d-lg-none d-md-block">
+                    <div className="col-md-auto d-lg-none d-md-block mt-2 text-center">
                         <button id="NIdeasBtn" className="btn btn-sm btn-light mx-1 active"
                                 onClick={this.showNewIdeas}
                         >Новые идеи
@@ -204,18 +205,18 @@ class IdeasRow extends Component {
                         </button>
                     </div>
                 </div>
-                <div id='new_ideas' className={this.visibleClassName}>
-                    <span className="self-text-center">Новые идеи</span>
-                    < IdeaList data={this.state.statusNW} onIdeaChange={this.onEditIdea}/>
-                </div>
-                <div id='inwork_ideas' className={this.invisibleClassName}>
-                    <span>В работе</span>
-                    < IdeaList data={this.state.statusIW} onIdeaChange={this.onEditIdea}/>
-                </div>
-                <div id='success_ideas' className={this.invisibleClassName}>
-                    <span>Выполненные</span>
-                    < IdeaList data={this.state.statusSC} onIdeaChange={this.onEditIdea}/>
-                </div>
+                    <div id="new_ideas" className={this.visibleClassName}>
+                        <div className="text-center h4">Новые идеи</div>
+                        < IdeaList data={this.state.statusNW} onIdeaChange={this.onEditIdea}/>
+                    </div>
+                    <div id="inwork_ideas" className={this.invisibleClassName}>
+                        <div className="text-center h4">В работе</div>
+                        < IdeaList data={this.state.statusIW} onIdeaChange={this.onEditIdea}/>
+                    </div>
+                    <div id="success_ideas" className={this.invisibleClassName}>
+                        <div className="text-center h4">Выполненные</div>
+                        < IdeaList data={this.state.statusSC} onIdeaChange={this.onEditIdea}/>
+                    </div>
                 <Notify toastList={this.state.notifies}
                         position="bottom-center"/>
 

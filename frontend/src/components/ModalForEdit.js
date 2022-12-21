@@ -21,15 +21,13 @@ function ModalForm(props) {
             _item = item;
             _item.title = titleNode.value;
             _item.description = descNode.value;
-            is_update = true;
         } else {
             // Новый элеммент!
             _item.title = titleNode.value;
             _item.description = descNode.value;
-            is_update = false;
         }
         handleClose();
-        return handleSubmitIdeaEditModal(_item, is_update)
+        return handleSubmitIdeaEditModal(_item)
     };
 
     const handleClose = () => onClose();
