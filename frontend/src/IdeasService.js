@@ -41,7 +41,11 @@ export default class IdeasService {
     }
 
     updateIdea(idea) {
-        const url = `${API_URL}/v1/ideas/${idea.pk}`;
-        return axios.put(url, idea);
+        const url = `${API_URL}/v1/ideas/${idea.pk}/`;
+        return axios.put(url, idea, {
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        });
     }
 }

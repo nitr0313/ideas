@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Notify from "./Notify";
-import { TOAST_PROPERTIES } from "../toastProps";
+import {TOAST_PROPERTIES} from "../toastProps";
 import IdeasService from "../IdeasService";
 import IdeaCard from "./IdeaCard"
 import Modal from "./ModalForEdit"
@@ -16,6 +16,7 @@ class IdeasRow extends Component {
         this.visibleClassName = "col-md-6 col-lg-4";
         this.onEditIdea = this.onEditIdea.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal.bind(this);
 
 
         this.state = {
@@ -55,19 +56,39 @@ class IdeasRow extends Component {
                     }
                 }
                 this.setState(() => {
-                    return {
-                        statusNW,
-                        statusIW,
-                        statusSC,
-                        statusAR,
-                        loaded: true
-                    };
-                }
+                        return {
+                            statusNW,
+                            statusIW,
+                            statusSC,
+                            statusAR,
+                            loaded: true
+                        };
+                    }
                 )
             })
     }
 
-    handleCloseModal () {
+    handleSubmitIdeaEditModal(item) {
+        IService.updateIdea(item).then(() => {
+            const status_name = "status" + item.status;
+            const data = this.state[status_name];
+
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].pk === item.pk) {
+                    data[i] = item
+                }
+            }
+
+            this.setState(() => {
+                return {
+                    status_name: data
+                }
+            })
+        })
+
+    }
+
+    handleCloseModal() {
         this.setState(() => {
             return {
                 showModal: false
@@ -82,7 +103,6 @@ class IdeasRow extends Component {
                 showModal: true
             }
         })
-
     }
 
     componentDidMount() {
@@ -101,7 +121,7 @@ class IdeasRow extends Component {
     showToast(type, description) {
         const toastProperties = TOAST_PROPERTIES.find((toast) => toast.title.toLowerCase() === type);
         toastProperties.description = description
-        this.setState({ notifies: [...this.state.notifies, toastProperties] })
+        this.setState({notifies: [...this.state.notifies, toastProperties]})
     }
 
     showNewIdeas = () => {
@@ -128,20 +148,22 @@ class IdeasRow extends Component {
     render() {
         const editItem = this.state.editItem;
         const showModal = this.state.showModal;
+        const onClose = this.handleCloseModal;
+        const handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal;
         return (
             <div className="row">
                 <div className="row">
                     <div className="col-md-6 d-lg-none d-md-block">
                         <button id="NIdeasBtn" className="btn btn-sm btn-light mx-1 active"
-                            onClick={this.showNewIdeas}
+                                onClick={this.showNewIdeas}
                         >Новые идеи
                         </button>
                         <button id="IWIdeasBtn" className="btn btn-sm btn-light mx-1"
-                            onClick={this.showInWork}
+                                onClick={this.showInWork}
                         >В работе
                         </button>
                         <button id="SIdeasBtn" className="btn btn-sm btn-light mx-1"
-                            onClick={this.showSuccess}
+                                onClick={this.showSuccess}
                         >Выполненные
                         </button>
                     </div>
@@ -159,17 +181,22 @@ class IdeasRow extends Component {
                     < IdeaList data={this.state.statusSC} onIdeaChange={this.onEditIdea}/>
                 </div>
                 <Notify toastList={this.state.notifies}
-                    position="bottom-center" />
+                        position="bottom-center"/>
 
-                <Modal editItem={editItem} showModal={showModal} onClose={this.state.onClose} />
+                <Modal
+                    editItem={editItem}
+                    showModal={showModal}
+                    onClose={onClose}
+                    handleSubmitIdeaEditModal={handleSubmitIdeaEditModal}/>
             </div>
         )
     }
 }
 
 
-class IdeaList extends Component {
-    constructor (props) {
+class IdeaList
+    extends Component {
+    constructor(props) {
         super(props);
     }
 
@@ -179,7 +206,10 @@ class IdeaList extends Component {
             <div className="list-group">
                 {this.props.data.map(idea => {
                     return (
-                        <IdeaCard key={idea.pk.toString()} idea={idea} onIdeaChange={this.props.onIdeaChange} />
+                        <IdeaCard
+                            key={idea.pk.toString()}
+                            idea={idea}
+                            onIdeaChange={this.props.onIdeaChange}/>
                     );
                 })}
             </div>
