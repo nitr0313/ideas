@@ -185,11 +185,11 @@ class IdeasRow extends Component {
         const onClose = this.handleCloseModal;
         const handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal;
         return (
-            <div className="row">
+            <div className="row mt-3">
                 <Button variant="primary" onClick={this.onCreateIdea}>
                     !Add new Idea!
                 </Button>
-                <div className="row">
+                <div className="row mt-3">
                     <div className="col-md-auto d-lg-none d-md-block mt-2 text-center">
                         <button id="NIdeasBtn" className="btn btn-sm btn-light mx-1 active"
                                 onClick={this.showNewIdeas}
