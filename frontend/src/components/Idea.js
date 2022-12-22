@@ -18,9 +18,7 @@ class IdeasRow extends Component {
         this.onEditIdea = this.onEditIdea.bind(this);
         this.onCreateIdea = this.onCreateIdea.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
-        this.handleCreateIdeaModal = this.handleCreateIdeaModal.bind(this);
         this.handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal.bind(this);
-
 
         this.state = {
             statusNW: [],
@@ -72,6 +70,10 @@ class IdeasRow extends Component {
     }
 
     update_rows(data, item, is_new_item) {
+        if (typeof data === "undefined") {
+            this.refresh_data()
+            return
+        }
         if (is_new_item !== true) {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].pk === item.pk) {
@@ -91,25 +93,33 @@ class IdeasRow extends Component {
     }
 
     handleSubmitIdeaEditModal(item) {
-        let data, is_new_item, status_name;
-        if ("pk" in item) {
-            IService.updateIdea(item).then( () => {
-                status_name = "status" + item.status;
-                is_new_item = false;
-            })
+        if ("pk" in item && typeof item.pk !== "undefined") {
+            this.updateIdea(item)
         } else {
-            IService.createIdea(item).then(result_data => {
-                item = result_data;
-                status_name = "status" + item.status;
-                is_new_item = true;
-            })
+            this.createIdea(item)
         }
-        data = this.state[status_name];
-        this.update_rows(data, item, is_new_item);  // or this.refresh_data() - for full update from api
     }
 
-    handleCreateIdeaModal() {
+    updateIdea(item) {
+        let status_name;
+        IService.updateIdea(item).then(result_data => {
+            console.log("updateIdea", result_data);
+            item = result_data.data;
+            status_name = "status" + item.status;
+        })
+        const data = this.state[status_name];
+        this.update_rows(data, item, false);
+    }
 
+    createIdea(item) {
+        let status_name;
+        IService.createIdea(item).then(result_data => {
+            console.log("createIdea", result_data);
+            item = result_data.data;
+            status_name = "status" + item.status;
+        })
+        const data = this.state[status_name];
+        this.update_rows(data, item, true);
     }
 
     handleCloseModal() {
@@ -205,18 +215,18 @@ class IdeasRow extends Component {
                         </button>
                     </div>
                 </div>
-                    <div id="new_ideas" className={this.visibleClassName}>
-                        <div className="text-center h4">Новые идеи</div>
-                        < IdeaList data={this.state.statusNW} onIdeaChange={this.onEditIdea}/>
-                    </div>
-                    <div id="inwork_ideas" className={this.invisibleClassName}>
-                        <div className="text-center h4">В работе</div>
-                        < IdeaList data={this.state.statusIW} onIdeaChange={this.onEditIdea}/>
-                    </div>
-                    <div id="success_ideas" className={this.invisibleClassName}>
-                        <div className="text-center h4">Выполненные</div>
-                        < IdeaList data={this.state.statusSC} onIdeaChange={this.onEditIdea}/>
-                    </div>
+                <div id="new_ideas" className={this.visibleClassName}>
+                    <div className="text-center h4">Новые идеи</div>
+                    < IdeaList data={this.state.statusNW} onIdeaChange={this.onEditIdea}/>
+                </div>
+                <div id="inwork_ideas" className={this.invisibleClassName}>
+                    <div className="text-center h4">В работе</div>
+                    < IdeaList data={this.state.statusIW} onIdeaChange={this.onEditIdea}/>
+                </div>
+                <div id="success_ideas" className={this.invisibleClassName}>
+                    <div className="text-center h4">Выполненные</div>
+                    < IdeaList data={this.state.statusSC} onIdeaChange={this.onEditIdea}/>
+                </div>
                 <Notify toastList={this.state.notifies}
                         position="bottom-center"/>
 

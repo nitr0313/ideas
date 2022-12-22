@@ -30,7 +30,7 @@ export default class IdeasService {
         const url = `${API_URL}/v1/ideas/${idea.pk}`;
         return axios.delete(url, {
             headers: {
-                'X-CSRFToken': csrfToken
+                'X-CSRFToken': csrfToken,
             }
         });
     }
@@ -39,19 +39,20 @@ export default class IdeasService {
         const url = `${API_URL}/v1/ideas/`;
         return axios.post(url, idea, {
             headers: {
-                'X-CSRFToken': csrfToken
+                'X-CSRFToken': csrfToken,
             }
         })
-            .then(response => response.data)
-            .catch(error => console.log(error));
+            // .then(response => response.data)
+            // .catch(error => console.log(error));
     }
 
     updateIdea(idea) {
         const url = `${API_URL}/v1/ideas/${idea.pk}/`;
         return axios.put(url, idea, {
             headers: {
-                'X-CSRFToken': csrfToken
+                'X-CSRFToken': csrfToken,
             }
-        });
+        })
+            // .catch(error => console.log(error)).then(response => response.data);
     }
 }

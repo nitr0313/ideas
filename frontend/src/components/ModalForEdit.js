@@ -15,14 +15,12 @@ function ModalForm(props) {
 
     const onSubmit = e => {
         e.preventDefault();
-        let is_update;
         let _item = {description: "", id: null, title: ""};
         if (typeof item !== 'undefined') {
             _item = item;
             _item.title = titleNode.value;
             _item.description = descNode.value;
         } else {
-            // Новый элеммент!
             _item.title = titleNode.value;
             _item.description = descNode.value;
         }
@@ -30,7 +28,12 @@ function ModalForm(props) {
         return handleSubmitIdeaEditModal(_item)
     };
 
-    const handleClose = () => onClose();
+    const handleClose = () => {
+        item.pk=null;
+        item.title="";
+        item.description="";
+        onClose();
+    }
 
     return (
         <>

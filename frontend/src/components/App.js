@@ -5,7 +5,8 @@ import IdeasService from "../IdeasService";
 import Notify from './Notify';
 import ErrorBoundary from "./Debug";
 import {Container} from 'react-bootstrap';
-
+import {Provider} from "react-redux";
+import {store} from "../store";
 
 class App extends Component {
     constructor(props) {
@@ -38,6 +39,8 @@ const container = document.getElementById("app");
 const root = createRoot(container);
 root.render(
     <StrictMode>
-        <App/>
+        <Provider store={store}>
+            <App/>
+        </Provider>
     </StrictMode>
 );
