@@ -28,11 +28,7 @@ class IdeasRow extends Component {
             loaded: false,
             placeholder: "Loading",
             notifies: [],
-            editItem: {
-                id: null,
-                title: "",
-                description: "",
-            },
+            editItem: null,
             showModal: false,
         };
     }
@@ -93,7 +89,8 @@ class IdeasRow extends Component {
     }
 
     handleSubmitIdeaEditModal(item) {
-        if ("pk" in item && typeof item.pk !== "undefined") {
+        console.log("handleSubmitIdeaEditModal item=",  item)
+        if ("pk" in item & typeof item.pk !== "undefined" & item.pk != null) {
             this.updateIdea(item)
         } else {
             this.createIdea(item)
@@ -132,9 +129,9 @@ class IdeasRow extends Component {
 
 
     onCreateIdea(idea) {
-        // TODO Что-то придумать для обнуления формы перед созданием или после того как ею "попользовались"
         this.setState(() => {
             return {
+                editItem: null,
                 showModal: true,
             }
         })

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -6,7 +6,7 @@ import IdeasService from "../IdeasService";
 
 function ModalForm(props) {
 
-    const item = props.editItem;
+    let item = props.editItem;
     const onClose = props.onClose;
     const handleSubmitIdeaEditModal = props.handleSubmitIdeaEditModal;
     const show = props.showModal;
@@ -15,8 +15,8 @@ function ModalForm(props) {
 
     const onSubmit = e => {
         e.preventDefault();
-        let _item = {description: "", id: null, title: ""};
-        if (typeof item !== 'undefined') {
+        var _item = new Object();
+        if ((typeof item !== 'undefined') & (item !== null)) {
             _item = item;
             _item.title = titleNode.value;
             _item.description = descNode.value;
@@ -24,14 +24,13 @@ function ModalForm(props) {
             _item.title = titleNode.value;
             _item.description = descNode.value;
         }
+        // delete(_item.id);   
         handleClose();
         return handleSubmitIdeaEditModal(_item)
     };
 
     const handleClose = () => {
-        item.pk=null;
-        item.title="";
-        item.description="";
+        item = null;
         onClose();
     }
 
@@ -46,7 +45,7 @@ function ModalForm(props) {
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Название</Form.Label>
                             <Form.Control
-                                defaultValue={item.title}
+                                defaultValue={ item !== null ? item.title : "" }
                                 key="idea_title"
                                 type="text"
                                 placeholder="title"
@@ -62,7 +61,7 @@ function ModalForm(props) {
                             <Form.Control
                                 key="idea_desc"
                                 as="textarea"
-                                defaultValue={item.description}
+                                defaultValue={ item !== null ? item.description : "" }
                                 rows={3}
                                 ref={node => (descNode = node)}
                             />

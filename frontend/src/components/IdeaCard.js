@@ -23,6 +23,7 @@ class IdeaCard extends Component {
     }
 
     handleDelete = (item) => {
+        // TODO после удаления редактирование или создание приводит к ошибке!
         this.service.deleteIdea(item).then(() => {
                 const obj = document.getElementById("idea_" + item.pk.toString())
                 obj.remove();
