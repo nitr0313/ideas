@@ -22,16 +22,16 @@ class IdeaCard extends Component {
         dispatch({type: "ADD_NOTIFY", payload: toastProperties})
     }
 
-    handleDelete = (item) => {
-        // TODO после удаления редактирование или создание приводит к ошибке!
-        this.service.deleteIdea(item).then(() => {
-                const obj = document.getElementById("idea_" + item.pk.toString())
-                obj.remove();
-                this.sendNotify({type: "Success", description: "Удалено!}"})
-            }
-        )
+    // handleDelete = (item) => {
+    //     // TODO после удаления редактирование или создание приводит к ошибке!
+    //     this.service.deleteIdea(item).then(() => {
+    //             const obj = document.getElementById("idea_" + item.pk.toString())
+    //             obj.remove();
+    //             this.sendNotify({type: "Success", description: "Удалено!}"})
+    //         }
+    //     )
 
-    }
+    // }
 
     handleArchive = (item) => {
         alert("archive" + JSON.stringify(
@@ -41,6 +41,11 @@ class IdeaCard extends Component {
 
     handleEdit = (item) => {
         this.props.onIdeaChange(item);
+    }
+
+    handleDelete = (item) => {
+        this.props.handleDeleteIdea(item);
+
     }
 
     render() {

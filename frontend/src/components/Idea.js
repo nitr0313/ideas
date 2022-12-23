@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Notify from "./Notify";
-import {TOAST_PROPERTIES} from "../toastProps";
+import { TOAST_PROPERTIES } from "../toastProps";
 import IdeasService from "../IdeasService";
 import IdeaCard from "./IdeaCard"
 import Modal from "./ModalForEdit"
@@ -19,6 +19,7 @@ class IdeasRow extends Component {
         this.onCreateIdea = this.onCreateIdea.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal.bind(this);
+        this.handleDeleteIdea = this.handleDeleteIdea.bind(this);
 
         this.state = {
             statusNW: [],
@@ -53,14 +54,14 @@ class IdeasRow extends Component {
                     }
                 }
                 this.setState(() => {
-                        return {
-                            statusNW,
-                            statusIW,
-                            statusSC,
-                            statusAR,
-                            loaded: true
-                        };
-                    }
+                    return {
+                        statusNW,
+                        statusIW,
+                        statusSC,
+                        statusAR,
+                        loaded: true
+                    };
+                }
                 )
             })
     }
@@ -83,13 +84,13 @@ class IdeasRow extends Component {
 
         this.setState(() => {
             return {
-                status_name: data
+                [status_name]: data
             }
         })
     }
 
     handleSubmitIdeaEditModal(item) {
-        console.log("handleSubmitIdeaEditModal item=",  item)
+        console.log("handleSubmitIdeaEditModal item=", item)
         if ("pk" in item & typeof item.pk !== "undefined" & item.pk != null) {
             this.updateIdea(item)
         } else {
@@ -127,6 +128,16 @@ class IdeasRow extends Component {
         })
     }
 
+    handleDeleteIdea(item) {
+        IService.deleteIdea(item).then(() => {
+            const status_name = "status".concat(item.status);
+            const data = this.state[status_name].filter(i => i.pk !== item.pk)
+            this.setState(() => {
+                return { [status_name]: data }
+            })
+            // this.sendNotify({ type: "Success", description: "Удалено!}" })
+        })
+    }
 
     onCreateIdea(idea) {
         this.setState(() => {
@@ -162,7 +173,7 @@ class IdeasRow extends Component {
     showToast(type, description) {
         const toastProperties = TOAST_PROPERTIES.find((toast) => toast.title.toLowerCase() === type);
         toastProperties.description = description
-        this.setState({notifies: [...this.state.notifies, toastProperties]})
+        this.setState({ notifies: [...this.state.notifies, toastProperties] })
     }
 
     showNewIdeas = () => {
@@ -191,6 +202,7 @@ class IdeasRow extends Component {
         const showModal = this.state.showModal;
         const onClose = this.handleCloseModal;
         const handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal;
+        const handleDeleteIdea = this.handleDeleteIdea;
         return (
             <div className="row mt-3">
                 <Button variant="primary" onClick={this.onCreateIdea}>
@@ -199,39 +211,49 @@ class IdeasRow extends Component {
                 <div className="row mt-3">
                     <div className="col-md-auto d-lg-none d-md-block mt-2 text-center">
                         <button id="NIdeasBtn" className="btn btn-sm btn-light mx-1 active"
-                                onClick={this.showNewIdeas}
+                            onClick={this.showNewIdeas}
                         >Новые идеи
                         </button>
                         <button id="IWIdeasBtn" className="btn btn-sm btn-light mx-1"
-                                onClick={this.showInWork}
+                            onClick={this.showInWork}
                         >В работе
                         </button>
                         <button id="SIdeasBtn" className="btn btn-sm btn-light mx-1"
-                                onClick={this.showSuccess}
+                            onClick={this.showSuccess}
                         >Выполненные
                         </button>
                     </div>
                 </div>
                 <div id="new_ideas" className={this.visibleClassName}>
                     <div className="text-center h4">Новые идеи</div>
-                    < IdeaList data={this.state.statusNW} onIdeaChange={this.onEditIdea}/>
+                    < IdeaList
+                        data={this.state.statusNW}
+                        onIdeaChange={this.onEditIdea}
+                        handleDeleteIdea={handleDeleteIdea} />
                 </div>
                 <div id="inwork_ideas" className={this.invisibleClassName}>
                     <div className="text-center h4">В работе</div>
-                    < IdeaList data={this.state.statusIW} onIdeaChange={this.onEditIdea}/>
+                    < IdeaList
+                        data={this.state.statusIW}
+                        onIdeaChange={this.onEditIdea}
+                        handleDeleteIdea={handleDeleteIdea} />
                 </div>
                 <div id="success_ideas" className={this.invisibleClassName}>
                     <div className="text-center h4">Выполненные</div>
-                    < IdeaList data={this.state.statusSC} onIdeaChange={this.onEditIdea}/>
+                    < IdeaList
+                        data={this.state.statusSC}
+                        onIdeaChange={this.onEditIdea}
+                        handleDeleteIdea={handleDeleteIdea} />
                 </div>
                 <Notify toastList={this.state.notifies}
-                        position="bottom-center"/>
+                    position="bottom-center" />
 
                 <Modal
                     editItem={editItem}
                     showModal={showModal}
                     onClose={onClose}
-                    handleSubmitIdeaEditModal={handleSubmitIdeaEditModal}/>
+                    handleSubmitIdeaEditModal={handleSubmitIdeaEditModal}
+                />
             </div>
         )
     }
@@ -253,7 +275,9 @@ class IdeaList
                         <IdeaCard
                             key={idea.pk.toString()}
                             idea={idea}
-                            onIdeaChange={this.props.onIdeaChange}/>
+                            onIdeaChange={this.props.onIdeaChange}
+                            handleDeleteIdea={this.props.handleDeleteIdea}
+                        />
                     );
                 })}
             </div>
