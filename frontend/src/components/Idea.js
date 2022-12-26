@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Notify from "./Notify";
-import { TOAST_PROPERTIES } from "../toastProps";
+import {TOAST_PROPERTIES} from "../toastProps";
 import IdeasService from "../IdeasService";
 import IdeaCard from "./IdeaCard"
 import Modal from "./ModalForEdit"
@@ -54,14 +54,14 @@ class IdeasRow extends Component {
                     }
                 }
                 this.setState(() => {
-                    return {
-                        statusNW,
-                        statusIW,
-                        statusSC,
-                        statusAR,
-                        loaded: true
-                    };
-                }
+                        return {
+                            statusNW,
+                            statusIW,
+                            statusSC,
+                            statusAR,
+                            loaded: true
+                        };
+                    }
                 )
             })
     }
@@ -79,12 +79,12 @@ class IdeasRow extends Component {
                 }
             }
         } else {
-            data.append(item)
+            data.push(item)
         }
 
         this.setState(() => {
             return {
-                [status_name]: data
+                ["status".concat(item.status)]: data
             }
         })
     }
@@ -99,25 +99,18 @@ class IdeasRow extends Component {
     }
 
     updateIdea(item) {
-        let status_name;
         IService.updateIdea(item).then(result_data => {
-            console.log("updateIdea", result_data);
-            item = result_data.data;
-            status_name = "status" + item.status;
+            const data = this.state["status".concat(item.status)];
+            this.update_rows(data, result_data.data, false);
         })
-        const data = this.state[status_name];
-        this.update_rows(data, item, false);
     }
 
     createIdea(item) {
-        let status_name;
         IService.createIdea(item).then(result_data => {
-            console.log("createIdea", result_data);
-            item = result_data.data;
-            status_name = "status" + item.status;
+            const data = this.state["status".concat(item.status)]
+            this.update_rows(data, result_data.data, true);
         })
-        const data = this.state[status_name];
-        this.update_rows(data, item, true);
+
     }
 
     handleCloseModal() {
@@ -133,7 +126,7 @@ class IdeasRow extends Component {
             const status_name = "status".concat(item.status);
             const data = this.state[status_name].filter(i => i.pk !== item.pk)
             this.setState(() => {
-                return { [status_name]: data }
+                return {[status_name]: data}
             })
             // this.sendNotify({ type: "Success", description: "Удалено!}" })
         })
@@ -173,7 +166,7 @@ class IdeasRow extends Component {
     showToast(type, description) {
         const toastProperties = TOAST_PROPERTIES.find((toast) => toast.title.toLowerCase() === type);
         toastProperties.description = description
-        this.setState({ notifies: [...this.state.notifies, toastProperties] })
+        this.setState({notifies: [...this.state.notifies, toastProperties]})
     }
 
     showNewIdeas = () => {
@@ -211,15 +204,15 @@ class IdeasRow extends Component {
                 <div className="row mt-3">
                     <div className="col-md-auto d-lg-none d-md-block mt-2 text-center">
                         <button id="NIdeasBtn" className="btn btn-sm btn-light mx-1 active"
-                            onClick={this.showNewIdeas}
+                                onClick={this.showNewIdeas}
                         >Новые идеи
                         </button>
                         <button id="IWIdeasBtn" className="btn btn-sm btn-light mx-1"
-                            onClick={this.showInWork}
+                                onClick={this.showInWork}
                         >В работе
                         </button>
                         <button id="SIdeasBtn" className="btn btn-sm btn-light mx-1"
-                            onClick={this.showSuccess}
+                                onClick={this.showSuccess}
                         >Выполненные
                         </button>
                     </div>
@@ -229,24 +222,24 @@ class IdeasRow extends Component {
                     < IdeaList
                         data={this.state.statusNW}
                         onIdeaChange={this.onEditIdea}
-                        handleDeleteIdea={handleDeleteIdea} />
+                        handleDeleteIdea={handleDeleteIdea}/>
                 </div>
                 <div id="inwork_ideas" className={this.invisibleClassName}>
                     <div className="text-center h4">В работе</div>
                     < IdeaList
                         data={this.state.statusIW}
                         onIdeaChange={this.onEditIdea}
-                        handleDeleteIdea={handleDeleteIdea} />
+                        handleDeleteIdea={handleDeleteIdea}/>
                 </div>
                 <div id="success_ideas" className={this.invisibleClassName}>
                     <div className="text-center h4">Выполненные</div>
                     < IdeaList
                         data={this.state.statusSC}
                         onIdeaChange={this.onEditIdea}
-                        handleDeleteIdea={handleDeleteIdea} />
+                        handleDeleteIdea={handleDeleteIdea}/>
                 </div>
                 <Notify toastList={this.state.notifies}
-                    position="bottom-center" />
+                        position="bottom-center"/>
 
                 <Modal
                     editItem={editItem}
