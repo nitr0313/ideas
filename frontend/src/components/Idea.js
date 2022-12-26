@@ -66,12 +66,11 @@ class IdeasRow extends Component {
             })
     }
 
-    update_rows(data, item, is_new_item) {
-        if (typeof data === "undefined") {
-            this.refresh_data()
-            return
-        }
-        if (is_new_item !== true) {
+    handleSubmitIdeaEditModal(item, new_item) {
+        console.log("handleSubmitIdeaEditModal item=", item)
+        const status_name = "status".concat(item.status);
+        const data = this.state[status_name];
+        if (new_item === false) {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].pk === item.pk) {
                     data[i] = item
@@ -81,36 +80,11 @@ class IdeasRow extends Component {
         } else {
             data.push(item)
         }
-
         this.setState(() => {
             return {
-                ["status".concat(item.status)]: data
+                [status_name]: data
             }
         })
-    }
-
-    handleSubmitIdeaEditModal(item) {
-        console.log("handleSubmitIdeaEditModal item=", item)
-        if ("pk" in item & typeof item.pk !== "undefined" & item.pk != null) {
-            this.updateIdea(item)
-        } else {
-            this.createIdea(item)
-        }
-    }
-
-    updateIdea(item) {
-        IService.updateIdea(item).then(result_data => {
-            const data = this.state["status".concat(item.status)];
-            this.update_rows(data, result_data, false);
-        })
-    }
-
-    createIdea(item) {
-        IService.createIdea(item).then(result_data => {
-            const data = this.state["status".concat(item.status)]
-            this.update_rows(data, result_data, true);
-        })
-
     }
 
     handleCloseModal() {

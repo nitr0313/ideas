@@ -4,6 +4,8 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import IdeasService from "../IdeasService";
 
+const IService = new IdeasService()
+
 function ModalForm(props) {
 
     let item = props.editItem;
@@ -14,18 +16,29 @@ function ModalForm(props) {
     let descNode;
 
     const onSubmit = e => {
+        const form = e.currentTarget;
         e.preventDefault();
-        var _item = {};
-        if ((typeof item === 'undefined') || (item === null)) {
-            _item.title = titleNode.value;
-            _item.description = descNode.value;
+        let _item = {};
+        let method;
+        if ((typeof item === "undefined") || (item === null)) {
+            method = "createIdea";
         } else {
+            method = "updateIdea";
             _item = item;
-            _item.title = titleNode.value;
-            _item.description = descNode.value;
         }
-        handleClose();
-        return handleSubmitIdeaEditModal(_item)
+        _item.title = titleNode.value;
+        _item.description = descNode.value;
+        IService[method](_item).then(result_data => {
+            if (result_data.status >= 400 ) {
+                for (let error in result_data.data) {
+
+
+                }
+            }
+            handleClose();
+            // TODO: Отправить Notify о создании или обновлении!
+            return handleSubmitIdeaEditModal(result_data, method === "createIdea");
+        })
     };
 
     const handleClose = () => {
@@ -51,12 +64,13 @@ function ModalForm(props) {
                                 autoFocus
                                 ref={node => (titleNode = node)}
                             />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group
                             className="mb-3"
                             controlId="exampleForm.ControlTextarea1"
                         >
-                            <Form.Label>Description</Form.Label>
+                            <Form.Label>Описание</Form.Label>
                             <Form.Control
                                 key="idea_desc"
                                 as="textarea"
@@ -64,6 +78,7 @@ function ModalForm(props) {
                                 rows={3}
                                 ref={node => (descNode = node)}
                             />
+                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                         </Form.Group>
                     </Form>
                 </Modal.Body>

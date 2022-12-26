@@ -41,7 +41,7 @@ export default class IdeasService {
             headers: {
                 'X-CSRFToken': csrfToken,
             }
-        }).then(response => response.data).catch(error => {alert(error.response.data.title);console.log(error)});
+        }).then(response => response.data).catch(error => error.response);
     }
 
     updateIdea(idea) {
@@ -50,6 +50,6 @@ export default class IdeasService {
             headers: {
                 'X-CSRFToken': csrfToken,
             }
-        }).catch(error => {alert(error.response.data);console.log(error)}).then(response => response.data);
+        }).then(response => response.data).catch(error => error.response);
     }
 }
