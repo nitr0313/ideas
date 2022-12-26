@@ -101,14 +101,14 @@ class IdeasRow extends Component {
     updateIdea(item) {
         IService.updateIdea(item).then(result_data => {
             const data = this.state["status".concat(item.status)];
-            this.update_rows(data, result_data.data, false);
+            this.update_rows(data, result_data, false);
         })
     }
 
     createIdea(item) {
         IService.createIdea(item).then(result_data => {
             const data = this.state["status".concat(item.status)]
-            this.update_rows(data, result_data.data, true);
+            this.update_rows(data, result_data, true);
         })
 
     }

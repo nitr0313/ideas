@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -15,16 +15,15 @@ function ModalForm(props) {
 
     const onSubmit = e => {
         e.preventDefault();
-        var _item = new Object();
-        if ((typeof item !== 'undefined') & (item !== null)) {
-            _item = item;
+        var _item = {};
+        if ((typeof item === 'undefined') || (item === null)) {
             _item.title = titleNode.value;
             _item.description = descNode.value;
         } else {
+            _item = item;
             _item.title = titleNode.value;
             _item.description = descNode.value;
         }
-        // delete(_item.id);   
         handleClose();
         return handleSubmitIdeaEditModal(_item)
     };
@@ -45,7 +44,7 @@ function ModalForm(props) {
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Название</Form.Label>
                             <Form.Control
-                                defaultValue={ item !== null ? item.title : "" }
+                                defaultValue={item !== null ? item.title : ""}
                                 key="idea_title"
                                 type="text"
                                 placeholder="title"
@@ -61,7 +60,7 @@ function ModalForm(props) {
                             <Form.Control
                                 key="idea_desc"
                                 as="textarea"
-                                defaultValue={ item !== null ? item.description : "" }
+                                defaultValue={item !== null ? item.description : ""}
                                 rows={3}
                                 ref={node => (descNode = node)}
                             />
