@@ -12,6 +12,7 @@ class IdeaCard extends Component {
         this.display = true;
         this.service = new IdeasService();
         this.handleEdit = this.handleEdit.bind(this);
+        this.changeIndexHandler = this.changeIndexHandler.bind(this);
     }
 
 
@@ -26,6 +27,11 @@ class IdeaCard extends Component {
         alert("archive" + JSON.stringify(
             item
         ))
+    }
+
+    changeIndexHandler = (item, count) => {
+        item.idea_index += count
+        this.props.onIdeaIndexChange(item);
     }
 
     handleEdit = (item) => {
@@ -45,17 +51,17 @@ class IdeaCard extends Component {
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">{this.props.idea.title}</h5>
                     <small>
-                        <div class="btn-group">
-                            <button type="button" className="btn  btn-sm btn-success">
+                        <div className="btn-group">
+                            <button type="button" className="btn btn-sm btn-secondary" onClick={() => this.changeIndexHandler(this.props.idea, -1)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-dash-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
                                     <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path>
                                 </svg>
                             </button>
-                            <button type="button" className="btn  btn-sm btn-danger">
+                            <button type="button" className="btn btn-sm text-bg-secondary">
                                 {this.props.idea.idea_index}
                             </button>
-                            <button type="button" className="btn btn-sm btn-success">
+                            <button type="button" className="btn btn-sm btn-secondary" onClick={() => this.changeIndexHandler(this.props.idea, 1)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
                                     <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>

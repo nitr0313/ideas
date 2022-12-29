@@ -20,6 +20,7 @@ class IdeasRow extends Component {
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal.bind(this);
         this.handleDeleteIdea = this.handleDeleteIdea.bind(this);
+        this.onIdeaIndexChange = this.onIdeaIndexChange.bind(this);
 
         this.state = {
             statusNW: [],
@@ -66,11 +67,18 @@ class IdeasRow extends Component {
             })
     }
 
-    handleSubmitIdeaEditModal(item, new_item) {
+
+    /*
+    * Хендлер Сохранения изменений (ререндер списка идей) из модального окна.
+    * запускается из ModalForEdit.
+    * @param {} idea - {pk: int, title: str, description: str, idea_index: int...}
+    * @param {bool} new_item - {Показывает передается новый элемент или такой уже есть в списке}
+     */
+    handleSubmitIdeaEditModal(item, isNewItem) {
         console.log("handleSubmitIdeaEditModal item=", item)
-        const status_name = "status".concat(item.status);
-        const data = this.state[status_name];
-        if (new_item === false) {
+        const statusName = "status".concat(item.status);
+        const data = this.state[statusName];
+        if (isNewItem === false) {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].pk === item.pk) {
                     data[i] = item
@@ -80,13 +88,26 @@ class IdeasRow extends Component {
         } else {
             data.push(item)
         }
+        data.sort(function(a, b) {
+            if (a.idea_index < b.idea_index) {
+                return 1;
+            }
+            if (a.idea_index > b.idea_index) {
+                return -1;
+            }
+        });
         this.setState(() => {
             return {
-                [status_name]: data
+                [statusName]: data
             }
         })
     }
 
+
+    /*
+    * Хендлер закрытия модальногго окна
+    * запускается из ModalForEdit
+     */
     handleCloseModal() {
         this.setState(() => {
             return {
@@ -95,6 +116,11 @@ class IdeasRow extends Component {
         })
     }
 
+    /*
+    * Удаление идеи через сервис IdeasService
+    * запускается из IdeaCard
+    * @param {} idea - {pk: int, title: str, description: str, idea_index: int...}
+     */
     handleDeleteIdea(item) {
         IService.deleteIdea(item).then(() => {
             const status_name = "status".concat(item.status);
@@ -106,7 +132,21 @@ class IdeasRow extends Component {
         })
     }
 
-    onCreateIdea(idea) {
+    onIdeaIndexChange(item) {
+        IService.updateIdea(item).then(() => {
+            this.handleSubmitIdeaEditModal(item, false);
+        })
+    }
+
+
+    /*
+    * Изменение состояния для запуска
+    * пустого модального окна для
+    * создания идеи
+    * запускается из IdeaCard
+    * @param
+    */
+    onCreateIdea() {
         this.setState(() => {
             return {
                 editItem: null,
@@ -115,6 +155,14 @@ class IdeasRow extends Component {
         })
     }
 
+
+    /*
+    * Изменение состояния для запуска
+    * модального окна с данными для
+    * редактирования
+    * запускается из IdeaCard
+    * @param {} idea - {pk: int, title: str, description: str, idea_index: int...}
+    */
     onEditIdea(idea) {
         this.setState(() => {
             return {
@@ -196,6 +244,7 @@ class IdeasRow extends Component {
                     < IdeaList
                         data={this.state.statusNW}
                         onIdeaChange={this.onEditIdea}
+                        onIdeaIndexChange={this.onIdeaIndexChange}
                         handleDeleteIdea={handleDeleteIdea}/>
                 </div>
                 <div id="inwork_ideas" className={this.invisibleClassName}>
@@ -203,6 +252,7 @@ class IdeasRow extends Component {
                     < IdeaList
                         data={this.state.statusIW}
                         onIdeaChange={this.onEditIdea}
+                        onIdeaIndexChange={this.onIdeaIndexChange}
                         handleDeleteIdea={handleDeleteIdea}/>
                 </div>
                 <div id="success_ideas" className={this.invisibleClassName}>
@@ -210,6 +260,7 @@ class IdeasRow extends Component {
                     < IdeaList
                         data={this.state.statusSC}
                         onIdeaChange={this.onEditIdea}
+                        onIdeaIndexChange={this.onIdeaIndexChange}
                         handleDeleteIdea={handleDeleteIdea}/>
                 </div>
                 <Notify toastList={this.state.notifies}
@@ -243,6 +294,7 @@ class IdeaList
                             key={idea.pk.toString()}
                             idea={idea}
                             onIdeaChange={this.props.onIdeaChange}
+                            onIdeaIndexChange={this.props.onIdeaIndexChange}
                             handleDeleteIdea={this.props.handleDeleteIdea}
                         />
                     );
