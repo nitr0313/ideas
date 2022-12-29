@@ -21,6 +21,7 @@ class IdeasRow extends Component {
         this.handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal.bind(this);
         this.handleDeleteIdea = this.handleDeleteIdea.bind(this);
         this.onIdeaIndexChange = this.onIdeaIndexChange.bind(this);
+        this.onIdeaStatusChange = this.onIdeaStatusChange.bind(this);
 
         this.state = {
             statusNW: [],
@@ -88,7 +89,7 @@ class IdeasRow extends Component {
         } else {
             data.push(item)
         }
-        data.sort(function(a, b) {
+        data.sort(function (a, b) {
             if (a.idea_index < b.idea_index) {
                 return 1;
             }
@@ -116,6 +117,7 @@ class IdeasRow extends Component {
         })
     }
 
+
     /*
     * Удаление идеи через сервис IdeasService
     * запускается из IdeaCard
@@ -128,13 +130,29 @@ class IdeasRow extends Component {
             this.setState(() => {
                 return {[status_name]: data}
             })
-            // this.sendNotify({ type: "Success", description: "Удалено!}" })
         })
     }
 
     onIdeaIndexChange(item) {
         IService.updateIdea(item).then(() => {
             this.handleSubmitIdeaEditModal(item, false);
+        })
+    }
+
+
+    /*
+    * Изменение статуса идеи
+    * @param {} idea - {pk: int, title: str, description: str, idea_index: int...}
+    * @param {string} oldStatus - Старый статус для удаления идеи из старого столбца
+     */
+    onIdeaStatusChange(item, oldStatus) {
+        IService.updateIdea(item).then(() => {
+            const status_name = "status".concat(oldStatus);
+            const data = this.state[status_name].filter(i => i.pk !== item.pk)
+            this.setState(() => {
+                return {[status_name]: data}
+            })
+            this.handleSubmitIdeaEditModal(item, true);
         })
     }
 
@@ -218,6 +236,7 @@ class IdeasRow extends Component {
         const onClose = this.handleCloseModal;
         const handleSubmitIdeaEditModal = this.handleSubmitIdeaEditModal;
         const handleDeleteIdea = this.handleDeleteIdea;
+        const onIdeaStatusChange = this.onIdeaStatusChange;
         return (
             <div className="row mt-3">
                 <Button variant="primary" onClick={this.onCreateIdea}>
@@ -245,7 +264,9 @@ class IdeasRow extends Component {
                         data={this.state.statusNW}
                         onIdeaChange={this.onEditIdea}
                         onIdeaIndexChange={this.onIdeaIndexChange}
-                        handleDeleteIdea={handleDeleteIdea}/>
+                        handleDeleteIdea={handleDeleteIdea}
+                        onIdeaStatusChange={onIdeaStatusChange}
+                    />
                 </div>
                 <div id="inwork_ideas" className={this.invisibleClassName}>
                     <div className="text-center h4">В работе</div>
@@ -253,7 +274,10 @@ class IdeasRow extends Component {
                         data={this.state.statusIW}
                         onIdeaChange={this.onEditIdea}
                         onIdeaIndexChange={this.onIdeaIndexChange}
-                        handleDeleteIdea={handleDeleteIdea}/>
+                        handleDeleteIdea={handleDeleteIdea}
+                        onIdeaStatusChange={onIdeaStatusChange}
+
+                    />
                 </div>
                 <div id="success_ideas" className={this.invisibleClassName}>
                     <div className="text-center h4">Выполненные</div>
@@ -261,7 +285,9 @@ class IdeasRow extends Component {
                         data={this.state.statusSC}
                         onIdeaChange={this.onEditIdea}
                         onIdeaIndexChange={this.onIdeaIndexChange}
-                        handleDeleteIdea={handleDeleteIdea}/>
+                        handleDeleteIdea={handleDeleteIdea}
+                        onIdeaStatusChange={onIdeaStatusChange}
+                    />
                 </div>
                 <Notify toastList={this.state.notifies}
                         position="bottom-center"/>
@@ -296,6 +322,7 @@ class IdeaList
                             onIdeaChange={this.props.onIdeaChange}
                             onIdeaIndexChange={this.props.onIdeaIndexChange}
                             handleDeleteIdea={this.props.handleDeleteIdea}
+                            onIdeaStatusChange={this.props.onIdeaStatusChange}
                         />
                     );
                 })}
