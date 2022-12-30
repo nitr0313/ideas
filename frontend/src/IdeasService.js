@@ -1,7 +1,7 @@
 import axios from 'axios';
 import getCookie from "./lib/csrfFetch";
 
-const API_URL = 'http://127.0.0.1:8000/api';
+const API_URL = 'api/v1';
 
 const csrfToken = getCookie('csrftoken')
 
@@ -12,7 +12,7 @@ export default class IdeasService {
     }
 
     getIdeas() {
-        const url = `${API_URL}/v1/ideas/`;
+        const url = `${API_URL}/ideas/`;
         return axios.get(url).then(response => response.data).catch(error => console.log(error));
     }
 
@@ -22,12 +22,12 @@ export default class IdeasService {
     }
 
     getIdea(pk) {
-        const url = `${API_URL}/v1/ideas/${pk}`;
+        const url = `${API_URL}/ideas/${pk}`;
         return axios.get(url).then(response => response.data);
     }
 
     deleteIdea(idea) {
-        const url = `${API_URL}/v1/ideas/${idea.pk}`;
+        const url = `${API_URL}/ideas/${idea.pk}`;
         return axios.delete(url, {
             headers: {
                 'X-CSRFToken': csrfToken,
@@ -36,7 +36,7 @@ export default class IdeasService {
     }
 
     createIdea(idea) {
-        const url = `${API_URL}/v1/ideas/`;
+        const url = `${API_URL}/ideas/`;
         return axios.post(url, idea, {
             headers: {
                 'X-CSRFToken': csrfToken,
@@ -45,7 +45,7 @@ export default class IdeasService {
     }
 
     updateIdea(idea) {
-        const url = `${API_URL}/v1/ideas/${idea.pk}/`;
+        const url = `${API_URL}/ideas/${idea.pk}/`;
         return axios.put(url, idea, {
             headers: {
                 'X-CSRFToken': csrfToken,
