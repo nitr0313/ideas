@@ -5,6 +5,7 @@ import IdeasService from "../IdeasService";
 import IdeaCard from "./IdeaCard"
 import Modal from "./ModalForEdit"
 import Button from 'react-bootstrap/Button';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 
 const IService = new IdeasService();
@@ -14,7 +15,7 @@ class IdeasRow extends Component {
     constructor(props) {
         super(props);
         this.invisibleClassName = "col-lg-4 d-none d-lg-block";
-        this.visibleClassName = "col-md-6 col-lg-4";
+        this.visibleClassName = "col-md-12 col-lg-4";
         this.onEditIdea = this.onEditIdea.bind(this);
         this.onCreateIdea = this.onCreateIdea.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -243,19 +244,12 @@ class IdeasRow extends Component {
                     !Add new Idea!
                 </Button>
                 <div className="row mt-3">
-                    <div className="col-md-auto d-lg-none d-md-block mt-2 text-center">
-                        <button id="NIdeasBtn" className="btn btn-sm btn-light mx-1 active"
-                                onClick={this.showNewIdeas}
-                        >Новые идеи
-                        </button>
-                        <button id="IWIdeasBtn" className="btn btn-sm btn-light mx-1"
-                                onClick={this.showInWork}
-                        >В работе
-                        </button>
-                        <button id="SIdeasBtn" className="btn btn-sm btn-light mx-1"
-                                onClick={this.showSuccess}
-                        >Выполненные
-                        </button>
+                    <div className="d-lg-none d-md-block text-center">
+                        <ListGroup key='sm' horizontal='sm'>
+                            <ListGroup.Item action href="#1" onClick={this.showNewIdeas}>Новые идеи</ListGroup.Item>
+                            <ListGroup.Item action href="#2" onClick={this.showInWork}>В работе</ListGroup.Item>
+                            <ListGroup.Item action href="#3" onClick={this.showSuccess}>Выполненные</ListGroup.Item>
+                        </ListGroup>
                     </div>
                 </div>
                 <div id="new_ideas" className={this.visibleClassName}>
@@ -291,7 +285,6 @@ class IdeasRow extends Component {
                 </div>
                 <Notify toastList={this.state.notifies}
                         position="bottom-center"/>
-
                 <Modal
                     editItem={editItem}
                     showModal={showModal}
@@ -313,7 +306,7 @@ class IdeaList
 
     render() {
         return (
-            <div className="list-group">
+            <div className="list-group ideas-list">
                 {this.props.data.map(idea => {
                     return (
                         <IdeaCard

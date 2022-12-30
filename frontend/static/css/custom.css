@@ -1,0 +1,15 @@
+
+div.arrow svg:hover {
+  color: #54e349;
+}
+
+div.disabled svg:hover {
+    color: #2f602c;
+}
+
+.list-group.ideas-list{
+    max-height: 600px;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
+}
