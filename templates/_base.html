@@ -1,34 +1,32 @@
 {% load static %}
-
 <!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock title %}</title>
-    <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-</head>
-<body>
-{#<div class="container">#}
-    {% block content %}
+<html lang="ru">
+        <head>
+                <meta name="keywords" content="..."/>
+                <meta name="description" content="..."/>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>
+                        {% block title %}
+                        {% endblock title %}
+                </title>
+                <link rel="stylesheet"
+                      href="https://bootswatch.com/5/darkly/bootstrap.min.css"/>
+                <link rel="stylesheet" href="{% static 'css/custom.css' %}"/>
+        </head>
+        <body>
+                {% include "includes/_navbar.html" %}
+                {% include "includes/_login.html" %}
+                {% block content %}
+                {% endblock content %}
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+                        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+                        crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+                        integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+                        crossorigin="anonymous"></script>
+                {% block main_app_scripts %}
 
-    {% endblock content %}
-{#</div>#}
-<script src="{% static 'frontend/main.js' %}"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js" crossorigin></script>
-
-<script
-        src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js"
-        crossorigin></script>
-
-<script
-        src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js"
-        crossorigin></script>
-
-<script>var Alert = ReactBootstrap.Alert;</script>
-</body>
+                {% endblock main_app_scripts %}
+        </body>
 </html>

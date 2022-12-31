@@ -1,0 +1,44 @@
+<div class="modal fade" id="exampleModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <form class="mx-2 modal-form"action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Login</label>
+                    <input type="text"
+                           name="username"
+                           id="username"
+                           class="form-control"
+                           placeholder="Login"
+                           aria-describedby="help_login"
+                           required />
+                    <small id="help_login" class="text-muted">{{ form.login.error }}</small>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password"
+                           class="form-control"
+                           name="password"
+                           id="password"
+                           placeholder="Password"
+                           aria-describedby="help_password"
+                           required />
+                    <small id="help_password" class="text-muted">{{ form.password1.error }}</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Log In</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

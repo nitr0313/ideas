@@ -3,6 +3,11 @@ div.arrow svg:hover {
   color: #54e349;
 }
 
+.navbar-height-45 {
+    height: 45px;
+    padding-top: 1rem;
+}
+
 div.disabled svg:hover {
     color: #2f602c;
 }
@@ -10,6 +15,11 @@ div.disabled svg:hover {
 .list-group.ideas-list{
     max-height: 600px;
     margin-bottom: 10px;
-    overflow-y:scroll;
+    overflow-y:auto;
     -webkit-overflow-scrolling: touch;
+}
+
+.modal-form {
+  padding-left: 1em;
+  padding-right: 1em;
 }

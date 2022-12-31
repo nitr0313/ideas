@@ -1,11 +1,19 @@
-{% extends '_base.html' %}
-
+{% extends "_base.html" %}
+{% load static %}
 
 {% block title %}
   Список идей
 {% endblock title %}
-
-
 {% block content %}
-<div id="app" class="row"></div>
+  <div id="app" class="row"></div>
 {% endblock content %}
+{% block main_app_scripts %}
+  <script src="{% static 'frontend/main.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js"
+          crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js"
+          crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js"
+          crossorigin></script>
+  <script>var Alert = ReactBootstrap.Alert;</script>
+{% endblock main_app_scripts %}
