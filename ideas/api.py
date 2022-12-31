@@ -20,7 +20,5 @@ class IdeaViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        qs = qs.order_by('-idea_index', 'updated_at')
-        if self.request.user.is_authenticated:
-            qs = qs.filter(user=self.request.user)
+        qs = qs.filter(user=self.request.user).order_by('-idea_index', 'updated_at')        
         return qs
