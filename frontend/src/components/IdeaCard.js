@@ -26,10 +26,10 @@ class IdeaCard extends Component {
         dispatch({ type: "ADD_NOTIFY", payload: toastProperties })
     }
 
-    handleArchive = (item) => {
-        alert("archive" + JSON.stringify(
-            item
-        ))
+    handleArchive = (idea) => {
+        const oldStatus = idea.status;
+        idea.status = 'AR';
+        this.props.onIdeaStatusChange(idea, oldStatus);
     }
 
     changeIndexHandler = (item, count) => {
