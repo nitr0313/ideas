@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 import environ
@@ -18,7 +17,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'crispy_forms',
 ]
 
 PROJECT_APPS = [
@@ -93,7 +91,5 @@ STATIC_URL = env.str('STATIC_URL', default='/static/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-LOGIN_REDIRECT_URL =  '/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
