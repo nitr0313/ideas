@@ -89,7 +89,7 @@ class IdeaCard extends Component {
                     <h5 className="mb-1">{idea.title}</h5>
 
                 </div>
-                <p className="mb-1">{idea.description}</p>
+                <p className="mb-1">{idea.description.substring(0, 40)}...</p>
                 <div className="d-flex w-100 justify-content-between">
                     <small style={{ fontSize: '0.550em' }}>{idea.created_at.split(".")[0]}</small>
                     <div className="btn-group">
