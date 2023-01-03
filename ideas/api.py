@@ -20,5 +20,7 @@ class IdeaViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        qs = qs.filter(user=self.request.user).order_by('-idea_index', 'updated_at')        
+        qs = qs.filter(
+            user=self.request.user
+        ).exclude(status=Idea.StatusIdea.archive).order_by('-idea_index', 'updated_at')
         return qs
