@@ -140,3 +140,6 @@ GitHub.sublime-settings
 # node
 node_modules
 /.idea/
+
+# autoupdater
+.auto_update.sh
