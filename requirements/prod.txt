@@ -1,1 +1,5 @@
 -r base.txt
+
+async-timeout==4.0.2
+django-defender==0.9.6
+redis==4.4.0
