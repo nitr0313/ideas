@@ -16,10 +16,6 @@ class IdeaCard extends Component {
         this.service = new IdeasService();
         this.handleEdit = this.handleEdit.bind(this);
         this.changeIndexHandler = this.changeIndexHandler.bind(this);
-        // this.draggedIdea = {}
-        this.state = {
-            draggedIdea: {}
-        }
     }
 
 
@@ -55,9 +51,7 @@ class IdeaCard extends Component {
         if (status_index === -1) {
             throw new Error(`Не верный статус!!! $this.statuses`);
         }
-
         if (status_index === 0) {
-            // notify error dont move
             console.log("Влево двигаться нельзя")
         } else {
             const oldStatus = idea.status;
@@ -72,9 +66,7 @@ class IdeaCard extends Component {
         if (status_index === -1) {
             throw new Error(`Не верный статус!!! $this.statuses`);
         }
-
         if (status_index === 2) {
-            // notify error dont move
             console.log("Вправо двигаться нельзя")
         } else {
             const oldStatus = idea.status;
@@ -85,7 +77,6 @@ class IdeaCard extends Component {
 
     dragOverHandler = (e) => {
         e.preventDefault()
-        // console.log("DRAG dragOverHandler", e)
         if (e.target.className === 'list-group-item list-group-item-action mt-2 ml-5') {
             e.target.style.margin = '0px 0px 20px 0px';
         }
@@ -96,37 +87,44 @@ class IdeaCard extends Component {
 
     dragLeaveHandler(e) {
         e.preventDefault()
-        e.target.style.margin = '0px 0px 0px 0px';
-        // if (e.target.className === 'list-group-item list-group-item-action mt-2 ml-5') {
-        //     e.target.style.margin = '0px 0px 0px 0px';
-        // }
+        if (e.target.className === 'list-group-item list-group-item-action mt-2 ml-5') {
+            e.target.style.margin = '0px 0px 0px 0px';
+        }
+        if (e.target.parentNode.className === 'list-group-item list-group-item-action mt-2 ml-5') {
+            e.target.parentNode.style.margin = '0px 0px 0px 0px';
+        }
     }
 
     dragStartHandler(e, idea) {
-        // e.preventDefault()
-        console.log("DRAG dragStartHandler", idea)
-        this.setState(()=>{return {draggedIdea: idea}})
-        // this.draggedIdea = idea;
-
+        e.dataTransfer.setData('idea', JSON.stringify(idea))
     }
 
     dragEndHandler(e, idea) {
         e.preventDefault()
-        e.target.style.margin = '0px 0px 0px 0px';
-        // if (e.target.className === 'list-group-item list-group-item-action mt-2 ml-5') {
-        //     e.target.style.margin = '0px 0px 0px 0px'
-        // }
+        if (e.target.className === 'list-group-item list-group-item-action mt-2 ml-5') {
+            e.target.style.margin = '0px 0px 0px 0px';
+        }
+        if (e.target.parentNode.className === 'list-group-item list-group-item-action mt-2 ml-5') {
+            e.target.parentNode.style.margin = '0px 0px 0px 0px';
+        }
     }
 
     dropHandler(e, idea) {
         e.preventDefault()
-        const oldIdea = this.state.draggedIdea
-        const newStatus = idea.status
-        console.log("dropHandler", oldIdea, idea.status)
-        this.setState(() => {return {draggedIdea: {}}})
-        // this.props.onIdeaStatusChange(idea, oldStatus);
-
-
+        if (e.target.className === 'list-group-item list-group-item-action mt-2 ml-5') {
+            e.target.style.margin = '0px 0px 0px 0px';
+        }
+        if (e.target.parentNode.className === 'list-group-item list-group-item-action mt-2 ml-5') {
+            e.target.parentNode.style.margin = '0px 0px 0px 0px';
+        }
+        const draggedIdea = JSON.parse(e.dataTransfer.getData('idea'))
+        const oldStatus = draggedIdea.status
+        if (oldStatus === idea.status) {
+            // На будущее возможно изменение индекса важности )
+            return
+        }
+        draggedIdea.status = idea.status
+        this.props.onIdeaStatusChange(draggedIdea, oldStatus);
     }
 
     render() {
@@ -143,7 +141,6 @@ class IdeaCard extends Component {
             >
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">{idea.title}</h5>
-
                 </div>
                 <p className="mb-1">{idea.description.substring(0, 40)}...</p>
                 <div className="d-flex w-100 justify-content-between">
