@@ -198,9 +198,9 @@ class IdeasRow extends Component {
 
     getCols = () => {
         return {
-            "new_ideas": document.getElementById("new_ideas"),
-            "inwork_ideas": document.getElementById("inwork_ideas"),
-            "success_ideas": document.getElementById("success_ideas"),
+            "statusNW": document.getElementById("statusNW"),
+            "statusIW": document.getElementById("statusIW"),
+            "statusSC": document.getElementById("statusSC"),
         }
     }
 
@@ -212,26 +212,27 @@ class IdeasRow extends Component {
 
     showNewIdeas = () => {
         let cols = this.getCols();
-        cols.new_ideas.className = this.visibleClassName;
-        cols.inwork_ideas.className = cols.success_ideas.className = this.invisibleClassName;
+        cols.statusNW.className = this.visibleClassName;
+        cols.statusIW.className = cols.statusSC.className = this.invisibleClassName;
         this.showToast('success', 'Показаны новые идеи');
     }
 
     showInWork = () => {
         let cols = this.getCols();
-        cols.inwork_ideas.className = this.visibleClassName;
-        cols.success_ideas.className = cols.new_ideas.className = this.invisibleClassName;
+        cols.statusIW.className = this.visibleClassName;
+        cols.statusSC.className = cols.statusNW.className = this.invisibleClassName;
         this.showToast('success', 'Показаны идеи в работе');
     }
 
     showSuccess = () => {
         let cols = this.getCols();
-        cols.success_ideas.className = this.visibleClassName;
-        cols.inwork_ideas.className = cols.new_ideas.className = this.invisibleClassName;
+        cols.statusSC.className = this.visibleClassName;
+        cols.statusIW.className = cols.statusNW.className = this.invisibleClassName;
         this.showToast('success', 'Показаны выполненные');
     }
 
     render() {
+        const cols = ["statusNW", "statusIW", "statusSC"];
         const editItem = this.state.editItem;
         const showModal = this.state.showModal;
         const onClose = this.handleCloseModal;
@@ -240,6 +241,7 @@ class IdeasRow extends Component {
         const onIdeaStatusChange = this.onIdeaStatusChange;
         return (
             <div className="row mt-3">
+
                 <Button variant="primary" onClick={this.onCreateIdea}>
                     !Add new Idea!
                 </Button>
@@ -251,38 +253,31 @@ class IdeasRow extends Component {
                             <ListGroup.Item action href="#3" onClick={this.showSuccess}>Выполненные</ListGroup.Item>
                         </ListGroup>
                     </div>
+                    <div className="d-md-none d-sm-none d-none d-lg-block text-center">
+                        <div className="list-group text-center list-group-horizontal-sm">
+                            <div className="list-group-item col-4 h-5">Новые идеи</div>
+                            <div className="list-group-item col-4 h-5">В работе</div>
+                            <div className="list-group-item col-4 h-5">Выполненные</div>
+                        </div>
+                    </div>
                 </div>
-                <div id="new_ideas" className={this.visibleClassName}>
-                    <div className="text-center h4">Новые идеи</div>
-                    < IdeaList
-                        data={this.state.statusNW}
-                        onIdeaChange={this.onEditIdea}
-                        onIdeaIndexChange={this.onIdeaIndexChange}
-                        handleDeleteIdea={handleDeleteIdea}
-                        onIdeaStatusChange={onIdeaStatusChange}
-                    />
-                </div>
-                <div id="inwork_ideas" className={this.invisibleClassName}>
-                    <div className="text-center h4">В работе</div>
-                    < IdeaList
-                        data={this.state.statusIW}
-                        onIdeaChange={this.onEditIdea}
-                        onIdeaIndexChange={this.onIdeaIndexChange}
-                        handleDeleteIdea={handleDeleteIdea}
-                        onIdeaStatusChange={onIdeaStatusChange}
 
-                    />
-                </div>
-                <div id="success_ideas" className={this.invisibleClassName}>
-                    <div className="text-center h4">Выполненные</div>
-                    < IdeaList
-                        data={this.state.statusSC}
-                        onIdeaChange={this.onEditIdea}
-                        onIdeaIndexChange={this.onIdeaIndexChange}
-                        handleDeleteIdea={handleDeleteIdea}
-                        onIdeaStatusChange={onIdeaStatusChange}
-                    />
-                </div>
+                {
+                    cols.map((statusCol, index) => {
+                        return (
+                            <div id={statusCol}
+                                 className={index === 0 ? this.visibleClassName : this.invisibleClassName}>
+                                <IdeaList
+                                    data={this.state[statusCol]}
+                                    onIdeaChange={this.onEditIdea}
+                                    onIdeaIndexChange={this.onIdeaIndexChange}
+                                    handleDeleteIdea={handleDeleteIdea}
+                                    onIdeaStatusChange={onIdeaStatusChange}
+                                />
+                            </div>
+                        )
+                    })
+                }
                 <Notify toastList={this.state.notifies}
                         position="bottom-center"/>
                 <Modal
