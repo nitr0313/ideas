@@ -2,7 +2,7 @@ from pathlib import Path
 
 import environ
 
-VERSION_="a0.1"
+VERSION_="a0.2"
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
