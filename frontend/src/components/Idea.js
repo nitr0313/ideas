@@ -214,25 +214,39 @@ class IdeasRow extends Component {
         let cols = this.getCols();
         cols.statusNW.className = this.visibleClassName;
         cols.statusIW.className = cols.statusSC.className = this.invisibleClassName;
-        this.showToast('success', 'Показаны новые идеи');
+        //this.showToast('success', 'Показаны новые идеи');
     }
 
     showInWork = () => {
         let cols = this.getCols();
         cols.statusIW.className = this.visibleClassName;
         cols.statusSC.className = cols.statusNW.className = this.invisibleClassName;
-        this.showToast('success', 'Показаны идеи в работе');
     }
 
     showSuccess = () => {
         let cols = this.getCols();
         cols.statusSC.className = this.visibleClassName;
         cols.statusIW.className = cols.statusNW.className = this.invisibleClassName;
-        this.showToast('success', 'Показаны выполненные');
     }
 
     render() {
-        const cols = ["statusNW", "statusIW", "statusSC"];
+        const cols = [
+            {
+                col_title: "Новые идеи",
+                col_id: "statusNW",
+                on_btn_click: this.showNewIdeas,
+            },
+            {
+                col_title: "В работе",
+                col_id: "statusIW",
+                on_btn_click: this.showInWork,
+            },
+            {
+                col_title: "Выполненные",
+                col_id: "statusSC",
+                on_btn_click: this.showSuccess,
+            },
+        ]
         const editItem = this.state.editItem;
         const showModal = this.state.showModal;
         const onClose = this.handleCloseModal;
@@ -248,27 +262,39 @@ class IdeasRow extends Component {
                 <div className="row mt-3">
                     <div className="d-lg-none d-md-block text-center">
                         <ListGroup key='sm' horizontal='sm'>
-                            <ListGroup.Item action href="#1" onClick={this.showNewIdeas}>Новые идеи</ListGroup.Item>
-                            <ListGroup.Item action href="#2" onClick={this.showInWork}>В работе</ListGroup.Item>
-                            <ListGroup.Item action href="#3" onClick={this.showSuccess}>Выполненные</ListGroup.Item>
+                            {
+                                cols.map((value, index) => {
+                                        return (
+                                            <ListGroup.Item
+                                                action href={"#" + index.toString()}
+                                                onClick={value.on_btn_click}> {value.col_title} </ListGroup.Item>
+                                        )
+                                    }
+                                )
+                            }
                         </ListGroup>
                     </div>
                     <div className="d-md-none d-sm-none d-none d-lg-block text-center">
                         <div className="list-group text-center list-group-horizontal-sm">
-                            <div className="list-group-item col-4 h-5">Новые идеи</div>
-                            <div className="list-group-item col-4 h-5">В работе</div>
-                            <div className="list-group-item col-4 h-5">Выполненные</div>
+                            {
+                                cols.map((value, index) => {
+                                        return (
+                                            <div className="list-group-item col-4 h-5 m-1">{value.col_title}</div>
+                                        )
+                                    }
+                                )
+                            }
                         </div>
                     </div>
                 </div>
 
                 {
-                    cols.map((statusCol, index) => {
+                    cols.map((data, index) => {
                         return (
-                            <div id={statusCol}
+                            <div id={data.col_id}
                                  className={index === 0 ? this.visibleClassName : this.invisibleClassName}>
                                 <IdeaList
-                                    data={this.state[statusCol]}
+                                    data={this.state[data.col_id]}
                                     onIdeaChange={this.onEditIdea}
                                     onIdeaIndexChange={this.onIdeaIndexChange}
                                     handleDeleteIdea={handleDeleteIdea}
